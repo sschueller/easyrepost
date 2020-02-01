@@ -81,7 +81,6 @@ import net.schueller.instarepost.R;
 import net.schueller.instarepost.adapters.PostAdapter;
 import net.schueller.instarepost.receivers.RepostReceiver;
 import net.schueller.instarepost.receivers.ShareReceiver;
-import net.schueller.instarepost.helpers.Util;
 
 import static net.schueller.instarepost.helpers.NotificationID.getID;
 
