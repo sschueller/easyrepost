@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">Easy Repost</string>
+    <string name="data_instagram_regex_pattern" formatted="false">(https://www.instagram.com/[^/]*[/]?(p|tv)/.*/).*</string>
+    <string name="data_instagram_user_agent" formatted="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36</string>
+    <string name="data_instagram_shared_data_regex_pattern" formatted="false">.*sharedData = (.*);</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_open_instagram">Instagram</string>
+    <string name="action_help">help</string>
+
+    <string name="view_details">Repost now&#8230;</string>
+    <string name="heads_up_share">Share&#8230;</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="app_intro">Intro</string>
+    <string name="post_thumbnail">Post Thumbnail</string>
+    <string name="post_share_button">SHARE</string>
+    <string name="post_repost_button">REPOST</string>
+    <string name="post_is_video">{fa-play-circle-o}</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General mainmenu -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_dedupe_hash">Dedupe Hashtags</string>
+    <string name="pref_description_dedupe_hash">Remove duplicate hashtags in caption.
+    </string>
+
+    <string name="pref_title_caption">Custom Caption</string>
+    <string name="pref_default_caption" formatted="false">#Repost %username% with @instarepost2016%nl%・・・%nl%%caption%</string>
+
+    <string name="pref_title_persistent_clipboard">Persistent Clipboard Listener</string>
+    <string name="pref_description_persistent_clipboard">If disabled this app will stop listening for Instagram URLs once closed. This will conserve battery, however you will need to start this app every time you want to repost or download from Instagram.</string>
+
+    <string name="pref_title_multiple_repost_intent">Multiple Notifications</string>
+    <string name="pref_description_multiple_repost_intent">If enabled a new notification will be triggered for each repost/download</string>
+
+    <string name="pref_title_pref_collect_stats">Publicly Share</string>
+    <string name="pref_description_pref_collect_stats">Allow us to repost your reposts. Enter your username bellow if you want to be named.</string>
+
+    <string name="pref_title_instagram_username">Instagram Username</string>
+    <string name="pref_default_instagram_username">\@instarepost2016</string>
+
+
+    <string name="pref_title_hashtags">Add friends to messages</string>
+    <string-array name="pref_example_hashtags_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_hashtags_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+
+    <string name="intro_slide1_title">Welcome</string>
+    <string name="intro_slide1_description">Thank you for downloading Easy Repost. In order for Easy Repost to download photos and videos it must be running in the background. Make sure you start Easy Repost before you try to save photos or videos in Instagram.</string>
+
+    <string name="intro_slide2_title">Open Instagram</string>
+    <string name="intro_slide2_description">In Instagram find a photo or video you want to download. Click on the three dots in the top right of the post. </string>
+    <string name="intro_slide3_title">Copy URL</string>
+    <string name="intro_slide3_description">Then tap on "Copy Share URL".</string>
+    <string name="intro_slide4_title">Repost</string>
+    <string name="intro_slide4_description">You will now receive a notification on which you can click to Repost. Optionally you can also repost from within the Easy Repost App. All media is also downloaded to your device in the instarepost folder.</string>
+    <string name="intro_slide5_title">Paste Caption</string>
+    <string name="intro_slide5_description">Once you have adjusted the Photo or Video you can also add back the Caption. Press and Hold on the caption field, then tap on Paste.</string>
+    <string name="intro_slide6_title">Custom Caption</string>
+    <string name="intro_slide6_description">To customize the caption click on settings</string>
+    <string name="intro_slide7_title">Custom Caption</string>
+    <string name="intro_slide7_description">Select caption</string>
+    <string name="intro_slide8_title">Custom Caption</string>
+    <string name="intro_slide8_description" formatted="false">Use %username% to get the original username, %nl% for a new line (line break) and %caption% to get the original caption.</string>
+
+    <string name="help_card_title">Welcome</string>
+    <string name="help_card_info">Click {fa-instagram} above and find a photo or video you want to download in Instagram.\n\nIn Instagram click {fa-ellipsis-v} on the top right of the photo/video you want to download/repost and select \'Get Share URL\'.\n\nFor help click on the {fa-question} above.</string>
+
+    <string name="build_version">Build version</string>
+
+    <string name="toast_please_install_instagram">Please install Instagram</string>
+    <string name="toast_launching_instagram">Launching Instagram</string>
+
+    <string name="dialog_are_you_sure_you_want_to_delete">Are you sure you want to delete this item?</string>
+    <string name="dialog_are_you_sure_you_want_to_delete_all">Are you sure you want to clear the database?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+
+    <!-- rate card -->
+    <string name="rate_card_state1_question">Enjoying Instrepost?</string>
+    <string name="rate_card_state2_question">How about a rating on the Play Store, then?</string>
+    <string name="rate_card_state3_question">Would you mind giving us some feedback?</string>
+    <string name="rate_card_btn_not_really">Not really</string>
+    <string name="rate_card_btn_yes">Yes!</string>
+    <string name="rate_card_btn_ok_sure">Ok, sure</string>
+    <string name="rate_card_btn_no_thanks">No, thanks</string>
+
+    <string name="feedback_email_address">support@techdroid.com</string>
+    <string name="feedback_subject">Feedback</string>
+    <string name="feedback_chooser">Send Feedback:</string>
+    <string name="send_to">Send to</string>
+    <string name="channel_name">Easy Repost</string>
+    <string name="channel_description">Easy Reposter notifications</string>
+    <string name="clear_all_data">Clear Database</string>
+    <string name="clear_all_data_desc">This will delete all data easy repost has captured. Photos and videos on device will not be deleted. They will only be remove from this app.</string>
+    <string name="file_exists">This image already exists on this device. Please remove it to download it again.</string>
+    <string name="action_open_folder">Folder</string>
+
+</resources>

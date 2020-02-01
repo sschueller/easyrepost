@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_open_instagram"
+        android:title="@string/action_open_instagram"
+        app:showAsAction="ifRoom"/>
+
+    <!--<item android:id="@+id/action_open_folder"-->
+        <!--android:title="@string/action_open_folder"-->
+        <!--app:showAsAction="ifRoom"/>-->
+
+    <item android:id="@+id/action_help"
+        android:title="@string/action_help"
+        app:showAsAction="ifRoom"/>
+
+    <!-- Settings, should always be in the overflow -->
+
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        app:showAsAction="ifRoom"/>
+
+</menu>
