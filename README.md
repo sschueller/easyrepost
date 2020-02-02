@@ -54,6 +54,11 @@ BTC:
 
      1Lv4Etacsjj1yi3AUGbzZZrcHHhbVbrNkY
 
+<img alt="1LoTXo728HzYTtyfbkaf5ewSRvu8ABTDPm"
+     src="https://bwipjs-api.metafloor.com/?bcid=qrcode&text=1LoTXo728HzYTtyfbkaf5ewSRvu8ABTDPm">
+     
+     1LoTXo728HzYTtyfbkaf5ewSRvu8ABTDPm
+
 ETH:
 
 <img alt="0xe5faC92651dD9Cf6ebab9C8B47d625502B334096"
