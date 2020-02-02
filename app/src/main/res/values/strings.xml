@@ -8,6 +8,8 @@
     <string name="action_open_instagram">Instagram</string>
     <string name="action_help">help</string>
 
+    <string name="error_private_posts_no_support">This appears to be a private post which is currently not supported</string>
+
     <string name="view_details">Repost now&#8230;</string>
     <string name="heads_up_share">Share&#8230;</string>
 

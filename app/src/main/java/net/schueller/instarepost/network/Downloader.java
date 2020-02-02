@@ -49,6 +49,8 @@ public class Downloader {
 
     public static void download(Context context, String folder, String url, final boolean isVideo, final JSONObject postMetaJSON) {
 
+        Log.v(TAG, "Download start");
+
         File direct = new File(folder);
         boolean dirOk = true;
         if (!direct.exists()) {
@@ -62,9 +64,14 @@ public class Downloader {
 
         Uri uri = Uri.fromFile(myFile);
 
+        Log.v(TAG, "Download uri: " + uri.toString());
+
         if (!myFile.exists()) {
 
             if (dirOk) {
+
+                Log.v(TAG, "new downloadManager");
+
                 DownloadManager downloadManager = (DownloadManager) (context)
                         .getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -80,6 +87,8 @@ public class Downloader {
                                 DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationUri(uri);
                 downloadManager.enqueue(request);
+
+                Log.v(TAG, "downloadManager enqueue");
 
                 BroadcastReceiver onComplete = new BroadcastReceiver() {
                     public void onReceive(Context context, Intent intent) {

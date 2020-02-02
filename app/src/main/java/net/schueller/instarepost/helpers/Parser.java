@@ -28,6 +28,30 @@ public class Parser {
 
     private static String TAG = "Parser";
 
+    public static boolean isPrivate(JSONObject sharedData) {
+
+        // entry_data -> ProfilePage -> graphql -> user -> is_private
+
+        boolean isPrivate = false;
+
+        try {
+            isPrivate = sharedData.getJSONObject("entry_data")
+                    .getJSONArray("ProfilePage")
+                    .getJSONObject(0)
+                    .getJSONObject("graphql")
+                    .getJSONObject("user")
+                    .getBoolean("is_private");
+
+        } catch (JSONException e) {
+            Log.v(TAG, "Unable to parse JSON for is_private");
+        }
+
+        Log.v(TAG, "is_private: " + isPrivate);
+
+        return isPrivate;
+
+    }
+
     public static ArrayList<Node> getAllNodes(JSONObject sharedData) {
 
         ArrayList<Node> nodes = new ArrayList<>();
