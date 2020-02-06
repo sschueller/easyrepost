@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Easy Repost</string>
     <string name="data_instagram_regex_pattern" formatted="false">(https://www.instagram.com/[^/]*[/]?(p|tv)/.*/).*</string>
-    <string name="data_instagram_user_agent" formatted="false">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36</string>
+    <string name="data_instagram_user_agent" formatted="false">Mozilla/5.0</string>
     <string name="data_instagram_shared_data_regex_pattern" formatted="false">.*sharedData = (.*);</string>
 
     <string name="action_settings">Settings</string>

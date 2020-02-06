@@ -72,6 +72,7 @@ import java.io.File;
 import java.util.List;
 
 import net.schueller.instarepost.helpers.Parser;
+import net.schueller.instarepost.network.ClipBoardProcessor;
 import net.schueller.instarepost.services.CBWatcherService;
 import net.schueller.instarepost.ui.EndlessRecyclerViewScrollListener;
 import net.schueller.instarepost.InstarepostApplication;
@@ -130,6 +131,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            // trigger clip
+            ClipBoardProcessor cbp = new ClipBoardProcessor(this);
+            cbp.performClipboardCheck();
+        }
+
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
         drawList();

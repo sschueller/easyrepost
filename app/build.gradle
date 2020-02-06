@@ -22,8 +22,8 @@ android {
         applicationId "net.schueller.instarepost"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 172
-        versionName "1.7.2"
+        versionCode 173
+        versionName "1.7.3"
     }
     buildTypes {
         release {
