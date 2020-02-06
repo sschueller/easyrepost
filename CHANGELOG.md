@@ -1,3 +1,7 @@
+### Version 1.7.3 Tag: v1.7.2 (2020-02-06)
+ * Android 10 support
+ * User Agent Fix
+
 ### Version 1.7.2 Tag: v1.7.2 (2020-02-02)
  * Version bump for play store, no changes to code
 
