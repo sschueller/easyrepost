@@ -130,13 +130,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+        Log.v(TAG, "onResume");
+        Log.v(TAG, "SDK: " + Build.VERSION.SDK_INT);
 
         if (Build.VERSION.SDK_INT >= 29) {
             // trigger clip
-            ClipBoardProcessor cbp = new ClipBoardProcessor(this);
+            Log.v(TAG, "trigger clip");
+            ClipBoardProcessor cbp = new ClipBoardProcessor(getApplicationContext());
             cbp.performClipboardCheck();
         }
+
+        super.onResume();
 
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
@@ -201,6 +205,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                ClipBoardProcessor cbp = new ClipBoardProcessor(getApplicationContext());
+                cbp.processUri(sharedText);
+
+                // go back to instagram
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+                if (launchIntent != null) {
+
+                    Toast.makeText(this, getString(R.string.toast_launching_instagram), Toast.LENGTH_SHORT).show();
+                    startActivity(launchIntent);//null pointer check in case package name was not found
+                } else {
+
+                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
         Iconify.with(new FontAwesomeModule());
 
         createNotificationChannel();
@@ -212,9 +239,13 @@ public class MainActivity extends AppCompatActivity {
 
         drawList();
 
-        // start clipboard listener
-        CBListenerIntent = new Intent(this, CBWatcherService.class);
-        startService(CBListenerIntent);
+        if (Build.VERSION.SDK_INT < 29) {
+
+            // start clipboard listener
+            CBListenerIntent = new Intent(this, CBWatcherService.class);
+            startService(CBListenerIntent);
+
+        }
 
         //  Declare a new thread to do a preference check
         Thread t = new Thread(new Runnable() {
@@ -434,8 +465,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject postMetaJSON = new JSONObject(post.getJsonMeta());
 
-            String imageFilePath = filepath + post.getImageFile();
-
             // JSON
             String caption = Parser.getCaption(postMetaJSON);
             //String profile_pic_url = "";
@@ -447,11 +476,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent repostIntent = new Intent(context, RepostReceiver.class);
                 Intent shareIntent = new Intent(context, ShareReceiver.class);
 
-                repostIntent.putExtra("filepath", imageFilePath);
+                repostIntent.putExtra("filepath", filepath);
                 repostIntent.putExtra("notificationId", notification_id);
                 repostIntent.putExtra("postId", post.getId());
 
-                shareIntent.putExtra("filepath", imageFilePath);
+                shareIntent.putExtra("filepath", filepath);
                 shareIntent.putExtra("notificationId", notification_id);
                 shareIntent.putExtra("postId", post.getId());
 
@@ -463,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!isVideo) {
                     // Create the URI from the media
-                    final File myImageFile = new File(imageFilePath);
+                    final File myImageFile = new File(filepath);
                     Bitmap bitmap_image = BitmapFactory.decodeFile(myImageFile.getAbsolutePath());
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "EasyRepost");

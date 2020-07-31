@@ -37,7 +37,7 @@ public class AppDatabase {
 
     static final String NAME = "Posts"; // we will add the .db extension
 
-    static final int VERSION = 5;
+    static final int VERSION = 6;
 
     @Migration(version = 2, database = AppDatabase.class)
     public static class Migration2 extends AlterTableMigration<Post> {
@@ -144,6 +144,20 @@ public class AppDatabase {
 */
 
         }
+
     }
+
+
+    @Migration(version = 6, database = AppDatabase.class)
+    public static class Migration4 extends AlterTableMigration<Post> {
+        public Migration4(Class<Post> table) {
+            super(table);
+        }
+        @Override
+        public void onPreMigrate() {
+            addColumn(SQLiteType.INTEGER, "status");
+        }
+    }
+
 
 }

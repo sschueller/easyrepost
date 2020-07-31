@@ -62,6 +62,9 @@ public class Post extends BaseModel {
     private int isVideo;
 
     @Column
+    private int status = 1; // status of download, 0 = pending, 1 = downloaded
+
+    @Column
     private String jsonMeta; // private with getters and setters
 
     public String getUsername() {
@@ -139,10 +142,19 @@ public class Post extends BaseModel {
     public static List<Post> createPostsList(int numPosts, int page) {
         return new Select()
                 .from(Post.class)
+                .where(Post_Table.status.eq(1))
                 .orderBy(Post_Table.id, false)
                 .offset(page * numPosts)
                 .limit(numPosts)
                 .queryList();
+    }
+
+    public static Post getByUrl(String url) {
+        return new Select()
+                .from(Post.class)
+                .where(Post_Table.url.eq(url))
+                .limit(1)
+                .querySingle();
     }
 
     public long getUserId() {
@@ -151,5 +163,13 @@ public class Post extends BaseModel {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
