@@ -77,7 +77,7 @@
     <string name="intro_slide8_description" formatted="false">Use %username% to get the original username, %nl% for a new line (line break) and %caption% to get the original caption.</string>
 
     <string name="help_card_title">Welcome</string>
-    <string name="help_card_info">Click {fa-instagram} above and find a photo or video you want to download in Instagram.\n\nIn Instagram click {fa-ellipsis-v} on the top right of the photo/video you want to download/repost and select \'Get Share URL\'.\n\nFor help click on the {fa-question} above.</string>
+    <string name="help_card_info">Click {fa-instagram} above and find a photo or video you want to download in Instagram.\n\nIn Instagram click {fa-ellipsis-v} on the top right of the photo/video you want to download/repost and select \'Get Share URL\'.\n\nFor help click on the {fa-question} above. Android 10+ users please use the instagram option \'Share to..\' and select this app.</string>
 
     <string name="build_version">Build version</string>
 

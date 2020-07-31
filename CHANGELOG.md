@@ -1,4 +1,8 @@
-### Version 1.7.3 Tag: v1.7.2 (2020-02-06)
+### Version 1.7.4 Tag: v1.7.4 (2020-07-31)
+ * Android 10 support
+ * Fixed download issue
+
+### Version 1.7.3 Tag: v1.7.3 (2020-02-06)
  * Android 10 support
  * User Agent Fix
 
