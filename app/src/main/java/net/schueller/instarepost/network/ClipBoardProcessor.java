@@ -52,37 +52,51 @@ public class ClipBoardProcessor {
         mContext = context;
     }
 
+    public void processUri(String uri) {
+        try {
+
+            Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_regex_pattern));
+            Matcher m = p.matcher(uri);
+
+            Log.v(TAG, "clipboardData: " + uri);
+
+            if (m.matches()) {
+
+                String url = m.group(1);
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+
+                // check item is not already in db
+                List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(url)).queryList();
+
+                if (posts.size() == 0) {
+                    try {
+                        parsePageHeaderInfo(url);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            Log.v(TAG, "Unable match" + e.toString());
+        }
+    }
+
     public void performClipboardCheck() {
         ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
 
+//        Log.v(TAG, "performClipboardCheck");
+//        Log.v(TAG, "hasPrimaryClip " + clipboardManager.hasPrimaryClip());
+//        Log.v(TAG, "getPrimaryClip " + clipboardManager.getPrimaryClip());
+
         if (clipboardManager.hasPrimaryClip() && clipboardManager.getPrimaryClip() != null) {
+
             try {
 
                 String clipboardData = clipboardManager.getPrimaryClip().getItemAt(0).getText().toString();
 
-                Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_regex_pattern));
-                Matcher m = p.matcher(clipboardData);
-
-                Log.v(TAG, "clipboardData: " + clipboardData);
-
-                if (m.matches()) {
-
-                    String url = m.group(1);
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-
-                    // check item is not already in db
-                    List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(url)).queryList();
-
-                    if (posts.size() == 0) {
-                        try {
-                            parsePageHeaderInfo(url);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
+                processUri(clipboardData);
 
             } catch (Exception e) {
                 Log.v(TAG, "Unable match" + e.toString());
@@ -140,7 +154,7 @@ public class ClipBoardProcessor {
                                     // we have a carousel, download each
                                     for (Node node : nodes) {
                                         Log.v(TAG, "Download: " + node.getUrl());
-                                        Downloader.download(mContext, filePath, node.getUrl(), node.isVideo(), jsonObj);
+                                        Downloader.download(mContext.getApplicationContext(), filePath, node.getUrl(), node.isVideo(), jsonObj);
                                     }
                                 } else {
                                     Log.v(TAG, "No nodes found");
