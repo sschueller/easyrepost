@@ -90,13 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
     static String TAG = "MainActivity";
 
-    String filePath =  Environment.getExternalStorageDirectory().getAbsolutePath() +
+    String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + "instarepost" + File.separator;
 
     private boolean AppRated;
 
     // Storage Permissions variables
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
+
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public List<Post> mPosts;
+
     public PostAdapter rvAdapter;
 
 
@@ -115,10 +117,12 @@ public class MainActivity extends AppCompatActivity {
     //persmission method.
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have read or write permission
-        int writePermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int writePermission = ActivityCompat
+                .checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int readPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
 
-        if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
+        if (writePermission != PackageManager.PERMISSION_GRANTED
+                || readPermission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
@@ -184,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(launchIntent);//null pointer check in case package name was not found
                 } else {
 
-                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
+                            .show();
                 }
                 break;
             case R.id.action_help:
@@ -223,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(launchIntent);//null pointer check in case package name was not found
                 } else {
 
-                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
+                            .show();
                 }
             }
         }
@@ -392,48 +398,50 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            ItemClickSupport.addTo(rvItems).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-
-                    final int position2 = position;
-
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            ItemClickSupport.addTo(rvItems)
+                    .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    //Yes button clicked
-                                    // Clicking on items
-                                    Post post = rvAdapter.getItem(position2);
-                                    // delete post.filePath
-                                    File file = new File(filePath+post.getImageFile());
-                                    if (!file.delete()) {
-                                        Log.e(TAG, "File Delete failed. " + filePath+post.getImageFile());
-                                    }
-                                    rvAdapter.removeAt(position2);
-                                    rvAdapter.notifyItemRemoved(position2);
+                        public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
 
-                                    if (rvAdapter.getItemCount() < 1) {
-                                        showHelpCard(true);
-                                    }
+                            final int position2 = position;
 
-                                    post.delete();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    //No button clicked
-                                    break;
-                            }
+                            DialogInterface.OnClickListener dialogClickListener
+                                    = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            //Yes button clicked
+                                            // Clicking on items
+                                            Post post = rvAdapter.getItem(position2);
+                                            // delete post.filePath
+                                            File file = new File(filePath + post.getImageFile());
+                                            if (!file.delete()) {
+                                                Log.e(TAG, "File Delete failed. " + filePath + post.getImageFile());
+                                            }
+                                            rvAdapter.removeAt(position2);
+                                            rvAdapter.notifyItemRemoved(position2);
+
+                                            if (rvAdapter.getItemCount() < 1) {
+                                                showHelpCard(true);
+                                            }
+
+                                            post.delete();
+                                            break;
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            //No button clicked
+                                            break;
+                                    }
+                                }
+                            };
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setMessage(getString(R.string.dialog_are_you_sure_you_want_to_delete))
+                                    .setPositiveButton(getString(R.string.dialog_yes), dialogClickListener)
+                                    .setNegativeButton(getString(R.string.dialog_no), dialogClickListener).show();
+                            return true;
                         }
-                    };
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    builder.setMessage(getString(R.string.dialog_are_you_sure_you_want_to_delete))
-                            .setPositiveButton(getString(R.string.dialog_yes), dialogClickListener)
-                            .setNegativeButton(getString(R.string.dialog_no), dialogClickListener).show();
-                    return true;
-                }
-            });
+                    });
         }
 
 
@@ -468,8 +476,8 @@ public class MainActivity extends AppCompatActivity {
             // JSON
             String caption = Parser.getCaption(postMetaJSON);
             //String profile_pic_url = "";
-            String username =  Parser.getUsername(postMetaJSON);
-            boolean isVideo =  Parser.isVideo(postMetaJSON);
+            String username = Parser.getUsername(postMetaJSON);
+            boolean isVideo = Parser.isVideo(postMetaJSON);
 
             try {
 
@@ -484,26 +492,30 @@ public class MainActivity extends AppCompatActivity {
                 shareIntent.putExtra("notificationId", notification_id);
                 shareIntent.putExtra("postId", post.getId());
 
-                PendingIntent pendingIntentRepost = PendingIntent.getBroadcast(context, notification_id, repostIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                PendingIntent pendingIntentShare = PendingIntent.getBroadcast(context, notification_id, shareIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent pendingIntentRepost = PendingIntent
+                        .getBroadcast(context, notification_id, repostIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent pendingIntentShare = PendingIntent
+                        .getBroadcast(context, notification_id, shareIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, share, 0);
-
 
                 if (!isVideo) {
                     // Create the URI from the media
                     final File myImageFile = new File(filepath);
                     Bitmap bitmap_image = BitmapFactory.decodeFile(myImageFile.getAbsolutePath());
 
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "EasyRepost");
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
+                            "EasyRepost");
                     notificationBuilder.setAutoCancel(true)
                             .setContentTitle(username)
                             .setContentText(caption)
                             .setSmallIcon(icon)
                             .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image))
                             .setAutoCancel(true)
-                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.view_details), pendingIntentRepost)
-                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.heads_up_share), pendingIntentShare)
+                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.view_details),
+                                    pendingIntentRepost)
+                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.heads_up_share),
+                                    pendingIntentShare)
                             .setContentIntent(pendingIntentRepost)
                             .setVibrate(new long[]{100, 0, 100})
 
@@ -511,27 +523,32 @@ public class MainActivity extends AppCompatActivity {
                             .setWhen(System.currentTimeMillis())
                             .setPriority(Notification.PRIORITY_MAX);
 
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    NotificationManager notificationManager = (NotificationManager) context
+                            .getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify(notification_id, notificationBuilder.build());
 
 
                 } else {
 
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "EasyRepost");
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
+                            "EasyRepost");
                     notificationBuilder.setAutoCancel(true)
                             .setContentTitle(username)
                             .setContentText(caption)
                             .setSmallIcon(icon)
                             .setAutoCancel(true)
-                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.view_details), pendingIntentRepost)
-                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.heads_up_share), pendingIntentShare)
+                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.view_details),
+                                    pendingIntentRepost)
+                            .addAction(android.R.drawable.ic_menu_share, context.getString(R.string.heads_up_share),
+                                    pendingIntentShare)
                             .setContentIntent(pendingIntentRepost)
                             .setVibrate(new long[]{100, 0, 100})
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setWhen(System.currentTimeMillis())
                             .setPriority(Notification.PRIORITY_MAX);
 
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    NotificationManager notificationManager = (NotificationManager) context
+                            .getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify(notification_id, notificationBuilder.build());
 
                 }
@@ -549,9 +566,13 @@ public class MainActivity extends AppCompatActivity {
     // rating crap
 
     CardView rateCard;
+
     TextView questionTextView;
+
     Button leftButton;
+
     Button rightButton;
+
     int state;
 
     private void rateCard() {
@@ -572,17 +593,14 @@ public class MainActivity extends AppCompatActivity {
                 if (state == 1) {
                     // Not really
 
-
                     state = 3;
                     setRateTexts();
                 } else if (state == 2) {
                     // No, thanks
 
-
                     dismisRate();
                 } else if (state == 3) {
                     // No, thanks
-
 
                     dismisRate();
                 }
@@ -594,7 +612,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (state == 1) {
                     // Yes!
-
 
                     state = 2;
                     setRateTexts();
@@ -624,13 +641,11 @@ public class MainActivity extends AppCompatActivity {
                     // Ok, sure
                     //Log.v(TAG, "Give Feedback");
 
-
-
                     dismisRate();
 
                     Intent Email = new Intent(Intent.ACTION_SEND);
                     Email.setType("text/email");
-                    Email.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.feedback_email_address) });
+                    Email.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.feedback_email_address)});
                     Email.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_subject));
                     startActivity(Intent.createChooser(Email, getString(R.string.feedback_chooser)));
                 }
@@ -664,7 +679,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(ratePref, true);
         editor.apply();
-
 
         rateCard.setVisibility(View.GONE);
     }

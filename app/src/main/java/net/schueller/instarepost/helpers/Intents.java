@@ -46,6 +46,7 @@ import in.srain.cube.clipboardcompat.ClipboardManagerCompatFactory;
 public class Intents {
 
     private static String subPath = "instarepost";
+
     private static String instagramPackage = "com.instagram.android";
 
     public static void share(Context context, Long postId) {
@@ -109,7 +110,8 @@ public class Intents {
                     String username = Parser.getUsername(postMetaJSON);
 
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                    String customCaptionPref = sharedPref.getString("example_text", context.getString(R.string.pref_default_caption));
+                    String customCaptionPref = sharedPref
+                            .getString("example_text", context.getString(R.string.pref_default_caption));
 
                     final ClipboardManagerCompat clipboardManager = ClipboardManagerCompatFactory.create(context);
 

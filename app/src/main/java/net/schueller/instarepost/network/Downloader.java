@@ -44,7 +44,8 @@ public class Downloader {
         return context.getString(stringId);
     }
 
-    public static void download(Context context, String folder, String url, final boolean isVideo, final JSONObject postMetaJSON) {
+    public static void download(Context context, String folder, String url, final boolean isVideo,
+            final JSONObject postMetaJSON) {
 
         Log.v(TAG, "Download start");
 
@@ -84,7 +85,6 @@ public class Downloader {
                                 DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationUri(uri);
 
-
                 Log.v(TAG, "downloadManager enqueue");
 
                 String username = Parser.getUsername(postMetaJSON);
@@ -118,7 +118,7 @@ public class Downloader {
 
                     post.save();
 
-                    Log.v(TAG, "post: "+ post.getUrl());
+                    Log.v(TAG, "post: " + post.getUrl());
 
                     // find add hashtags
                     List<String> hashtags = Util.parseHashTags(caption);

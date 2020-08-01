@@ -46,6 +46,7 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private ArrayList<Post> postList = new ArrayList<>();
+
     private Context mContext;
 
     // Pass in the contact array into the constructor
@@ -154,7 +155,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     static class PostViewHolder extends RecyclerView.ViewHolder {
 
         ImageView postImageView;
+
         TextView captionTextView, usernameTextView, isVideo;
+
         Button repostButton, shareButton;
 
         PostViewHolder(View itemView) {

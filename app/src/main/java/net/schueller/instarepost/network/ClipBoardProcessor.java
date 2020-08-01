@@ -41,11 +41,14 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static net.schueller.instarepost.helpers.Parser.matchInstagramUri;
 
 public class ClipBoardProcessor {
 
     private static final String TAG = "ClipBoardProcessor";
+
     private Context mContext;
+
     private String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + "instarepost" + File.separator;
 
@@ -54,42 +57,38 @@ public class ClipBoardProcessor {
     }
 
     public void processUri(String uri) {
-        try {
 
-            Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_regex_pattern));
-            Matcher m = p.matcher(uri);
+        String parsedUri = matchInstagramUri(uri, mContext);
 
-            Log.v(TAG, "clipboardData: " + uri);
+        if (parsedUri != null) {
 
-            if (m.matches()) {
+            try {
 
-                String url = m.group(1);
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
 
                 // check item is not already in db
-                List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(url)).queryList();
+                List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(parsedUri)).queryList();
 
                 if (posts.size() == 0) {
                     try {
-                        parsePageHeaderInfo(url);
+                        parsePageHeaderInfo(parsedUri);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
+            } catch (Exception e) {
+                Log.v(TAG, "Unable match: " + e.toString());
             }
-        } catch (Exception e) {
-            Log.v(TAG, "Unable match" + e.toString());
+        } else {
+            Log.v(TAG, "Unable match: " + uri);
         }
+
     }
 
     public void performClipboardCheck() {
         ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
-
-//        Log.v(TAG, "performClipboardCheck");
-//        Log.v(TAG, "hasPrimaryClip " + clipboardManager.hasPrimaryClip());
-//        Log.v(TAG, "getPrimaryClip " + clipboardManager.getPrimaryClip());
 
         if (clipboardManager.hasPrimaryClip() && clipboardManager.getPrimaryClip() != null) {
 
@@ -124,8 +123,9 @@ public class ClipBoardProcessor {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful())
+                    if (!response.isSuccessful()) {
                         throw new IOException("Unexpected code " + response);
+                    }
 
                     assert responseBody != null;
 
@@ -135,7 +135,8 @@ public class ClipBoardProcessor {
 
                     try {
                         Elements js = doc.select("script[type=text/javascript]");
-                        Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_shared_data_regex_pattern));
+                        Pattern p = Pattern
+                                .compile(mContext.getString(R.string.data_instagram_shared_data_regex_pattern));
 
                         for (Element Elm : js) {
                             Matcher m = p.matcher(Elm.html());
@@ -155,7 +156,8 @@ public class ClipBoardProcessor {
                                     // we have a carousel, download each
                                     for (Node node : nodes) {
                                         Log.v(TAG, "Download: " + node.getUrl());
-                                        Downloader.download(mContext.getApplicationContext(), filePath, node.getUrl(), node.isVideo(), jsonObj);
+                                        Downloader.download(mContext.getApplicationContext(), filePath, node.getUrl(),
+                                                node.isVideo(), jsonObj);
                                     }
                                 } else {
                                     Log.v(TAG, "No nodes found");
@@ -167,7 +169,9 @@ public class ClipBoardProcessor {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(mContext, mContext.getString(R.string.error_private_posts_no_support), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext,
+                                            mContext.getString(R.string.error_private_posts_no_support),
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                         }

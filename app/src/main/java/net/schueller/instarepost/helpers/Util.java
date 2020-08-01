@@ -40,7 +40,7 @@ public class Util {
 
     // http://stackoverflow.com/questions/29728573/android-loading-drawable-into-imageview-taking-a-lot-of-memory/29728695#29728695
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+            int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

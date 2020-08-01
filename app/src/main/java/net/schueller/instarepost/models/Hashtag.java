@@ -30,6 +30,7 @@ import net.schueller.instarepost.models.Hashtag_Table;
 @Table(database = AppDatabase.class)
 @ManyToMany(referencedTable = Post.class)
 public class Hashtag extends BaseModel {
+
     @PrimaryKey(autoincrement = true)
     long id; // package-private recommended, not required
 

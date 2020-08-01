@@ -28,6 +28,7 @@ import com.github.paolorotolo.appintro.AppIntroFragment;
 import net.schueller.instarepost.R;
 
 public class IntroActivity extends AppIntro2 {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
