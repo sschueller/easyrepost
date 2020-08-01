@@ -31,8 +31,8 @@
     <string name="intro_slide1_description">Thank you for downloading Easy Repost. In order for Easy Repost to download photos and videos it must be running in the background. Make sure you start Easy Repost before you try to save photos or videos in Instagram.</string>
     <string name="intro_slide2_title">Open Instagram</string>
     <string name="intro_slide2_description">In Instagram find a photo or video you want to download. Click on the three dots in the top right of the post. </string>
-    <string name="intro_slide3_title">Share URL</string>
-    <string name="intro_slide3_description">Click "Share to." and select this App</string>
+    <string name="intro_slide3_title">Share to…</string>
+    <string name="intro_slide3_description">Click "Share to…" and select this App.</string>
     <string name="intro_slide4_title">Repost</string>
     <string name="intro_slide4_description">You will now receive a notification on which you can click to Repost. Optionally you can also repost from within the Easy Repost App. All media is also downloaded to your device in the instarepost folder.</string>
     <string name="intro_slide5_title">Paste Caption</string>
