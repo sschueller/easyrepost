@@ -20,11 +20,6 @@ package net.schueller.instarepost.helpers;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +28,10 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-    private static String TAG = "Util";
-
     public static List<String> parseHashTags(String string) {
         Pattern MY_PATTERN = Pattern.compile("#(\\S+)");
         Matcher mat = MY_PATTERN.matcher(string);
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         while (mat.find()) {
             list.add(mat.group(1));
         }
@@ -47,7 +40,7 @@ public class Util {
 
     // http://stackoverflow.com/questions/29728573/android-loading-drawable-into-imageview-taking-a-lot-of-memory/29728695#29728695
     public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+            int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

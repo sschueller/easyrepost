@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,11 +41,14 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static net.schueller.instarepost.helpers.Parser.matchInstagramUri;
 
 public class ClipBoardProcessor {
 
     private static final String TAG = "ClipBoardProcessor";
+
     private Context mContext;
+
     private String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
             File.separator + "instarepost" + File.separator;
 
@@ -52,43 +56,42 @@ public class ClipBoardProcessor {
         mContext = context;
     }
 
-    public void processUri(String uri) {
-        try {
+    public boolean processUri(String uri) {
 
-            Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_regex_pattern));
-            Matcher m = p.matcher(uri);
+        String parsedUri = matchInstagramUri(uri, mContext);
 
-            Log.v(TAG, "clipboardData: " + uri);
+        if (parsedUri != null) {
 
-            if (m.matches()) {
+            try {
 
-                String url = m.group(1);
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
 
                 // check item is not already in db
-                List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(url)).queryList();
+                List<Post> posts = new Select().from(Post.class).where(Post_Table.url.eq(parsedUri)).queryList();
 
                 if (posts.size() == 0) {
                     try {
-                        parsePageHeaderInfo(url);
+                        parsePageHeaderInfo(parsedUri);
+                        return true;
                     } catch (Exception e) {
                         e.printStackTrace();
+                        return false;
                     }
                 }
 
+            } catch (Exception e) {
+                Log.v(TAG, "Unable match: " + e.toString());
+                return false;
             }
-        } catch (Exception e) {
-            Log.v(TAG, "Unable match" + e.toString());
+        } else {
+            Log.v(TAG, "Unable match: " + uri);
         }
+        return false;
     }
 
     public void performClipboardCheck() {
         ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
-
-//        Log.v(TAG, "performClipboardCheck");
-//        Log.v(TAG, "hasPrimaryClip " + clipboardManager.hasPrimaryClip());
-//        Log.v(TAG, "getPrimaryClip " + clipboardManager.getPrimaryClip());
 
         if (clipboardManager.hasPrimaryClip() && clipboardManager.getPrimaryClip() != null) {
 
@@ -114,6 +117,9 @@ public class ClipBoardProcessor {
                 .addHeader("user-agent", mContext.getString(R.string.data_instagram_user_agent))
                 .build();
 
+        Log.v(TAG, "urlStr: " + urlStr);
+
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -123,8 +129,9 @@ public class ClipBoardProcessor {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful())
+                    if (!response.isSuccessful()) {
                         throw new IOException("Unexpected code " + response);
+                    }
 
                     assert responseBody != null;
 
@@ -134,12 +141,13 @@ public class ClipBoardProcessor {
 
                     try {
                         Elements js = doc.select("script[type=text/javascript]");
-                        Pattern p = Pattern.compile(mContext.getString(R.string.data_instagram_shared_data_regex_pattern));
+                        Pattern p = Pattern
+                                .compile(mContext.getString(R.string.data_instagram_shared_data_regex_pattern));
 
                         for (Element Elm : js) {
                             Matcher m = p.matcher(Elm.html());
                             if (m.matches()) {
-                                jsonObj = new JSONObject(m.group(1));
+                                jsonObj = new JSONObject(Objects.requireNonNull(m.group(1)));
                             }
                         }
 
@@ -154,7 +162,8 @@ public class ClipBoardProcessor {
                                     // we have a carousel, download each
                                     for (Node node : nodes) {
                                         Log.v(TAG, "Download: " + node.getUrl());
-                                        Downloader.download(mContext.getApplicationContext(), filePath, node.getUrl(), node.isVideo(), jsonObj);
+                                        Downloader.download(mContext.getApplicationContext(), filePath, node.getUrl(),
+                                                node.isVideo(), jsonObj);
                                     }
                                 } else {
                                     Log.v(TAG, "No nodes found");
@@ -166,7 +175,9 @@ public class ClipBoardProcessor {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(mContext, mContext.getString(R.string.error_private_posts_no_support), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext,
+                                            mContext.getString(R.string.error_private_posts_no_support),
+                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                         }

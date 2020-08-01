@@ -15,15 +15,20 @@ repositories {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.3'
+
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 
     defaultConfig {
         applicationId "net.schueller.instarepost"
         minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 174
-        versionName "1.7.4"
+        targetSdkVersion 29
+        versionCode 200
+        versionName "2.0.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -34,9 +39,16 @@ android {
     applicationVariants.all { variant ->
         variant.resValue "string", "versionName", variant.versionName
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
+    implementation 'androidx.preference:preference:1.1.1'
+
 
     // if Java use this. If using Kotlin do NOT use this.
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
@@ -50,17 +62,53 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    testImplementation 'junit:junit:4.12'
 
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.github.sschueller:android-ClipboardManagerCompat:-SNAPSHOT'
-    implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.paolorotolo:appintro:4.1.0'
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
-    implementation("com.squareup.okhttp3:okhttp:4.3.1")
+    implementation('com.squareup.okhttp3:okhttp:4.8.0')
+
+    // Testing-only dependencies
+    testImplementation 'junit:junit:4.13'
+
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.2.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+
+    // Assertions
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+    androidTestImplementation 'com.google.truth:truth:1.0.1'
+
+    // Espresso dependencies
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.2.0'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.2.0'
+
+    // The following Espresso dependency can be either "implementation"
+    // or "androidTestImplementation", depending on whether you want the
+    // dependency to appear on your APK's compile classpath or the test APK
+    // classpath.
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+    testImplementation 'androidx.test.ext:truth:1.2.0'
+
 }

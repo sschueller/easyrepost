@@ -17,7 +17,13 @@
  */
 package net.schueller.instarepost.helpers;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
+import java.lang.ref.WeakReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.schueller.instarepost.R;
 import net.schueller.instarepost.models.Node;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +32,23 @@ import java.util.ArrayList;
 
 public class Parser {
 
+
     private static String TAG = "Parser";
+
+    public static String matchInstagramUri(String uri, Context context) {
+
+        Pattern pattern = Pattern
+                .compile(context.getResources().getString(R.string.data_instagram_regex_pattern));
+        Matcher matches = pattern.matcher(uri);
+
+        Log.v(TAG, "clipboardData: " + uri);
+
+        if (matches.matches()) {
+            return matches.group(1);
+        }
+
+        return null;
+    }
 
     public static boolean isPrivate(JSONObject sharedData) {
 

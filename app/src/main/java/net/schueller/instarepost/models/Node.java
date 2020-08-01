@@ -20,6 +20,7 @@ package net.schueller.instarepost.models;
 public class Node {
 
     private String url;
+
     private boolean isVideo;
 
     public String getUrl() {

@@ -19,8 +19,8 @@ package net.schueller.instarepost.adapters;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +46,7 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private ArrayList<Post> postList = new ArrayList<>();
+
     private Context mContext;
 
     // Pass in the contact array into the constructor
@@ -151,10 +152,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyItemRangeChanged(position, postList.size());
     }
 
-    class PostViewHolder extends RecyclerView.ViewHolder {
+    static class PostViewHolder extends RecyclerView.ViewHolder {
 
         ImageView postImageView;
+
         TextView captionTextView, usernameTextView, isVideo;
+
         Button repostButton, shareButton;
 
         PostViewHolder(View itemView) {

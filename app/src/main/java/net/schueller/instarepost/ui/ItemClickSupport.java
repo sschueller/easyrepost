@@ -17,15 +17,20 @@
  */
 package net.schueller.instarepost.ui;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import net.schueller.instarepost.R;
 
 public class ItemClickSupport {
+
     private final RecyclerView mRecyclerView;
+
     private OnItemClickListener mOnItemClickListener;
+
     private OnItemLongClickListener mOnItemLongClickListener;
+
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -35,6 +40,7 @@ public class ItemClickSupport {
             }
         }
     };
+
     private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -45,10 +51,11 @@ public class ItemClickSupport {
             return false;
         }
     };
+
     private RecyclerView.OnChildAttachStateChangeListener mAttachListener
             = new RecyclerView.OnChildAttachStateChangeListener() {
         @Override
-        public void onChildViewAttachedToWindow(View view) {
+        public void onChildViewAttachedToWindow(@NonNull View view) {
             if (mOnItemClickListener != null) {
                 view.setOnClickListener(mOnClickListener);
             }
@@ -58,7 +65,7 @@ public class ItemClickSupport {
         }
 
         @Override
-        public void onChildViewDetachedFromWindow(View view) {
+        public void onChildViewDetachedFromWindow(@NonNull View view) {
 
         }
     };
@@ -90,9 +97,8 @@ public class ItemClickSupport {
         return this;
     }
 
-    public ItemClickSupport setOnItemLongClickListener(OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
         mOnItemLongClickListener = listener;
-        return this;
     }
 
     private void detach(RecyclerView view) {

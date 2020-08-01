@@ -33,6 +33,7 @@ import java.util.List;
 @Table(database = AppDatabase.class)
 @ManyToMany(referencedTable = Hashtag.class)
 public class Post extends BaseModel {
+
     @PrimaryKey(autoincrement = true)
     long id; // package-private recommended, not required
 

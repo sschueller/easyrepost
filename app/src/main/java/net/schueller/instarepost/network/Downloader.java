@@ -44,7 +44,8 @@ public class Downloader {
         return context.getString(stringId);
     }
 
-    public static void download(Context context, String folder, String url, final boolean isVideo, final JSONObject postMetaJSON) {
+    public static void download(Context context, String folder, String url, final boolean isVideo,
+            final JSONObject postMetaJSON) {
 
         Log.v(TAG, "Download start");
 
@@ -84,20 +85,7 @@ public class Downloader {
                                 DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationUri(uri);
 
-
                 Log.v(TAG, "downloadManager enqueue");
-
-//                BroadcastReceiver onComplete = new BroadcastReceiver() {
-//                    public void onReceive(Context context, Intent intent) {
-//                        context.unregisterReceiver(this);
-//                        // save meta data
-//
-//                        // getMimeTypeForDownloadedFile(long id)
-//
-//                        Log.v(TAG, "Download complete");
-//                    }
-//                };
-
 
                 String username = Parser.getUsername(postMetaJSON);
                 String caption = Parser.getCaption(postMetaJSON);
@@ -130,7 +118,7 @@ public class Downloader {
 
                     post.save();
 
-                    Log.v(TAG, "post: "+ post.getUrl());
+                    Log.v(TAG, "post: " + post.getUrl());
 
                     // find add hashtags
                     List<String> hashtags = Util.parseHashTags(caption);
@@ -148,9 +136,8 @@ public class Downloader {
                         postHashtag.save();
                     }
 
+                    // start download
                     downloadManager.enqueue(request);
-
-                    //MainActivity.presentHeadsUpNotification(context, R.mipmap.ic_launcher, filePath, post);
 
                 } catch (Exception e) {
                     e.printStackTrace();
