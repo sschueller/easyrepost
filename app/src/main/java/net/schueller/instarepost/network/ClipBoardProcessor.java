@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,7 +140,7 @@ public class ClipBoardProcessor {
                         for (Element Elm : js) {
                             Matcher m = p.matcher(Elm.html());
                             if (m.matches()) {
-                                jsonObj = new JSONObject(m.group(1));
+                                jsonObj = new JSONObject(Objects.requireNonNull(m.group(1)));
                             }
                         }
 

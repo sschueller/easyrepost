@@ -17,7 +17,7 @@
  */
 package net.schueller.instarepost.ui;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import net.schueller.instarepost.R;

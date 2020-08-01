@@ -87,18 +87,6 @@ public class Downloader {
 
                 Log.v(TAG, "downloadManager enqueue");
 
-//                BroadcastReceiver onComplete = new BroadcastReceiver() {
-//                    public void onReceive(Context context, Intent intent) {
-//                        context.unregisterReceiver(this);
-//                        // save meta data
-//
-//                        // getMimeTypeForDownloadedFile(long id)
-//
-//                        Log.v(TAG, "Download complete");
-//                    }
-//                };
-
-
                 String username = Parser.getUsername(postMetaJSON);
                 String caption = Parser.getCaption(postMetaJSON);
 
@@ -148,9 +136,8 @@ public class Downloader {
                         postHashtag.save();
                     }
 
+                    // start download
                     downloadManager.enqueue(request);
-
-                    //MainActivity.presentHeadsUpNotification(context, R.mipmap.ic_launcher, filePath, post);
 
                 } catch (Exception e) {
                     e.printStackTrace();

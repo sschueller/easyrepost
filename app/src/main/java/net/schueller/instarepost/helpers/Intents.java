@@ -23,7 +23,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.content.FileProvider;
+
+import androidx.core.content.FileProvider;
+
 import android.webkit.MimeTypeMap;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -114,6 +116,7 @@ public class Intents {
                     String clipText = username + "\n---\n" + caption;
 
                     if (!"".equals(customCaptionPref)) {
+                        assert customCaptionPref != null;
                         clipText = customCaptionPref.replace("%username%", username);
                         clipText = clipText.replace("%caption%", caption);
                         clipText = clipText.replace("%nl%", "\n");
@@ -148,7 +151,7 @@ public class Intents {
 
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_VIEW);
-            shareIntent.setData(Uri.parse("https://www.instagram.com/_u/"+post.getUsername().substring(1)+"/"));
+            shareIntent.setData(Uri.parse("https://www.instagram.com/_u/" + post.getUsername().substring(1) + "/"));
 
             context.startActivity(shareIntent);
         }
