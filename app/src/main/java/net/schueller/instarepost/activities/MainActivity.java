@@ -137,16 +137,9 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "onResume");
         Log.v(TAG, "SDK: " + Build.VERSION.SDK_INT);
 
-        if (Build.VERSION.SDK_INT >= 29) {
-            // trigger clip
-            Log.v(TAG, "trigger clip");
-            ClipBoardProcessor cbp = new ClipBoardProcessor(getApplicationContext());
-            cbp.performClipboardCheck();
-        }
-
         super.onResume();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         verifyStoragePermissions(this);
         drawList();
     }
@@ -208,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -218,19 +211,24 @@ public class MainActivity extends AppCompatActivity {
             if ("text/plain".equals(type)) {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 ClipBoardProcessor cbp = new ClipBoardProcessor(getApplicationContext());
-                cbp.processUri(sharedText);
+                if (cbp.processUri(sharedText)) {
+                    // go back to instagram
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+                    if (launchIntent != null) {
 
-                // go back to instagram
-                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
-                if (launchIntent != null) {
+                        Toast.makeText(this, getString(R.string.toast_launching_instagram), Toast.LENGTH_SHORT)
+                                .show();
+                        startActivity(launchIntent);//null pointer check in case package name was not found
+                    } else {
 
-                    Toast.makeText(this, getString(R.string.toast_launching_instagram), Toast.LENGTH_SHORT).show();
-                    startActivity(launchIntent);//null pointer check in case package name was not found
+                        Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
+                                .show();
+                    }
                 } else {
-
-                    Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
+                    Toast.makeText(this, getString(R.string.toast_not_a_valid_instagram_uri), Toast.LENGTH_LONG)
                             .show();
                 }
+
             }
         }
 

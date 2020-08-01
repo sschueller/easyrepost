@@ -56,7 +56,7 @@ public class ClipBoardProcessor {
         mContext = context;
     }
 
-    public void processUri(String uri) {
+    public boolean processUri(String uri) {
 
         String parsedUri = matchInstagramUri(uri, mContext);
 
@@ -73,18 +73,21 @@ public class ClipBoardProcessor {
                 if (posts.size() == 0) {
                     try {
                         parsePageHeaderInfo(parsedUri);
+                        return true;
                     } catch (Exception e) {
                         e.printStackTrace();
+                        return false;
                     }
                 }
 
             } catch (Exception e) {
                 Log.v(TAG, "Unable match: " + e.toString());
+                return false;
             }
         } else {
             Log.v(TAG, "Unable match: " + uri);
         }
-
+        return false;
     }
 
     public void performClipboardCheck() {
@@ -113,6 +116,9 @@ public class ClipBoardProcessor {
                 /* this browser agent thing is important to trick servers into sending us the LARGEST versions of the images */
                 .addHeader("user-agent", mContext.getString(R.string.data_instagram_user_agent))
                 .build();
+
+        Log.v(TAG, "urlStr: " + urlStr);
+
 
         client.newCall(request).enqueue(new Callback() {
             @Override
