@@ -1,3 +1,8 @@
+### Version 2.0.0 Tag: v2.0.0 (2020-08-01)
+ * SDK to 29
+ * Updated Intro
+ * General code cleanup
+
 ### Version 1.7.4 Tag: v1.7.4 (2020-07-31)
  * Android 10 support
  * Fixed download issue
