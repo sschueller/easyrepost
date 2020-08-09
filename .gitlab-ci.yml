@@ -41,9 +41,10 @@ ensureContainer:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build
   before_script:
-    # We store this binary file in a variable as hex with this command, `xxd -p thorium-android-app.jks`
+    # We store this binary file in a variable as hex with this command, `xxd -p android-signing-keystore.jks > jks.txt` (remove all \n)
     # Then we convert the hex back to a binary file
     - echo "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.jks
+    - md5sum android-signing-keystore.jks
     # get next version from latest changelog
     - "export VERSION_CODE=`ls -f ./fastlane/metadata/android/en-US/changelogs | cut -d_ -f3 | sort -n | tail -1 | rev | cut -c5- | rev` && echo $VERSION_CODE"
     # We add 200 to get this high enough above current versionCodes that are published
