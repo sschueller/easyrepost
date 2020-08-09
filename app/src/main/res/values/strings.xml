@@ -51,7 +51,7 @@
 
     <string name="toast_please_install_instagram">Please install Instagram</string>
     <string name="toast_launching_instagram">Launching Instagram</string>
-    <string name="toast_not_a_valid_instagram_uri">Not a valid Instagram URL</string>
+    <string name="toast_not_a_valid_instagram_uri">Not a valid Instagram URL: </string>
 
     <string name="dialog_are_you_sure_you_want_to_delete">Are you sure you want to delete this item?</string>
     <string name="dialog_are_you_sure_you_want_to_delete_all">Are you sure you want to clear the database?</string>

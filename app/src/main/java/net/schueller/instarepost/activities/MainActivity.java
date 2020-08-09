@@ -216,16 +216,16 @@ public class MainActivity extends AppCompatActivity {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
                     if (launchIntent != null) {
 
-                        Toast.makeText(this, getString(R.string.toast_launching_instagram), Toast.LENGTH_SHORT)
-                                .show();
                         startActivity(launchIntent);//null pointer check in case package name was not found
+                        finish();
+
                     } else {
 
                         Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
                                 .show();
                     }
                 } else {
-                    Toast.makeText(this, getString(R.string.toast_not_a_valid_instagram_uri), Toast.LENGTH_LONG)
+                    Toast.makeText(this, getString(R.string.toast_not_a_valid_instagram_uri) + sharedText, Toast.LENGTH_LONG)
                             .show();
                 }
 
