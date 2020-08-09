@@ -1,1 +1,19 @@
-Download or repost public instagram posts easily by selecting "Copy Link" in Instagram.
+Easily and quickly repost photos and videos from Instagram. Just open instrepost then open instagram and click on "Share To...". Then select this App.
+
+<b>Note:</b> Users with a private profile can not be reposted or downloaded. 
+
+All posts are downloaded into a folder called <b>instarepost</b> on your device.
+
+Under settings you can adjust how the post caption is handled. Using the following tags you can pull existing parts from the post into your caption:
+
+%username% = Username of original Post
+%caption% = Caption of original Post
+%nl% = New line, make a newline
+
+<b>Note:</b> Please attribute photos and videos to the original owners.
+
+If something doesn't work or you want to request a new feature please send an email.
+
+Instant Repost and Downloader is NOT associated, affiliated, endorsed, sponsored or approved by Instagram or Facebook.
+
+This app is now open source and the source can be downloaded here: https://github.com/sschueller/easyrepost

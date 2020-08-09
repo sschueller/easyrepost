@@ -1,3 +1,6 @@
+### Version 2.0.1 Tag: v2.0.1 (2020-08-08)
+ * Added reels support
+
 ### Version 2.0.0 Tag: v2.0.0 (2020-08-01)
  * SDK to 29
  * Updated Intro

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Easy Repost</string>
-    <string name="data_instagram_regex_pattern" formatted="false" translatable="false">(https://www.instagram.com/[^/]*[/]?(p|tv)/.*/).*</string>
+    <string name="data_instagram_regex_pattern" formatted="false" translatable="false">(https://www.instagram.com/[^/]*[/]?(p|tv|reel)/.*/).*</string>
     <string name="data_instagram_user_agent" formatted="false" translatable="false">Mozilla/5.0</string>
     <string name="data_instagram_shared_data_regex_pattern" formatted="false" translatable="false">.*sharedData = (.*);</string>
     <string name="post_is_video" translatable="false">{fa-play-circle-o}</string>
