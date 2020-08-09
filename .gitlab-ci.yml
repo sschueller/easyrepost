@@ -93,9 +93,10 @@ publishInternal:
     - buildRelease
   when: manual
   before_script:
-    - echo "$google_play_service_account_api_key_json" > ../google_play_api_key.json
+    - echo $google_play_service_account_api_key_json > ../google_play_api_key.json
     - ls -la /builds/sschueller/
     - md5sum /builds/sschueller/google_play_api_key.json
+    - cat /builds/sschueller/google_play_api_key.json
   after_script:
     - rm -f ../google_play_api_key.json
   script:
@@ -110,7 +111,7 @@ publishInternal:
   when: manual
   dependencies: []
   before_script:
-    - echo "$google_play_service_account_api_key_json" > ../google_play_api_key.json
+    - echo $google_play_service_account_api_key_json > ../google_play_api_key.json
     - md5sum ../google_play_api_key.json
   after_script:
     - rm -f ../google_play_api_key.json
