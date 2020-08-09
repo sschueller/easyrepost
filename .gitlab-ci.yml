@@ -43,6 +43,7 @@ ensureContainer:
   before_script:
     # We store this binary file in a variable as hex with this command, `xxd -p android-signing-keystore.jks > jks.txt` (remove all \n)
     # Then we convert the hex back to a binary file
+    - pwd
     - echo "$signing_jks_file_hex" | xxd -r -p - > android-signing-keystore.jks
     - md5sum android-signing-keystore.jks
     # get next version from latest changelog
