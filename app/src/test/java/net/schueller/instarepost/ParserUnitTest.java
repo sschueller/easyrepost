@@ -24,20 +24,28 @@ public class ParserUnitTest {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         // matches
+        // photo
         assertEquals("https://www.instagram.com/p/CDRGNQTHh7X/",
                 matchInstagramUri("https://www.instagram.com/p/CDRGNQTHh7X/?igshid=1opjbfc2u28wa",
                         context));
-
+        // video
         assertEquals("https://www.instagram.com/tv/CDRGNQTHh7X/",
                 matchInstagramUri("https://www.instagram.com/tv/CDRGNQTHh7X/",
                         context));
 
-        //no matches
+        // reel
+        assertEquals("https://www.instagram.com/reel/CDjOWHJFv3s/",
+                matchInstagramUri("https://www.instagram.com/reel/CDjOWHJFv3s/?igshid=naym1jfysz5h",
+                        context));
+
+        // no matches
         assertNull(matchInstagramUri("https://www.instagram.com/r/CDRGN",
                 context));
+
         assertNull(
                 matchInstagramUri("https://www.instagram.com/p/CDRGNQTHh7X",
                         context));
+
         assertNull(matchInstagramUri("https://www.google.com/p/CDRGNQTHh7X/?igshid=1opjbfc2u28wa",
                 context));
     }

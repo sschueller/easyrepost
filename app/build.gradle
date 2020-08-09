@@ -6,6 +6,36 @@ def dbflow_version = "4.2.4"
 // or 10-digit short-hash of a specific commit. (Useful for bugs fixed in develop, but not in a release yet)
 
 
+ext.readProperty = { paramName -> readPropertyWithDefault(paramName, null) }
+ext.readPropertyWithDefault = { paramName, defaultValue ->
+    if (project.hasProperty(paramName)) {
+        return project.getProperties().get(paramName)
+    } else {
+        Properties properties = new Properties()
+        if (project.rootProject.file('local.properties').exists()) {
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        }
+        if (properties.getProperty(paramName) != null) {
+            return properties.getProperty(paramName)
+        } else {
+            return defaultValue
+        }
+    }
+}
+
+// Try reading secrets from file
+def secretsPropertiesFile = rootProject.file("secrets.properties")
+def secretProperties = new Properties()
+
+if (secretsPropertiesFile.exists()) {
+    secretProperties.load(new FileInputStream(secretsPropertiesFile))
+}
+// Otherwise read from environment variables, this happens in CI
+else {
+    secretProperties.setProperty("signing_keystore_password", "${System.getenv('signing_keystore_password')}")
+    secretProperties.setProperty("signing_key_password", "${System.getenv('signing_key_password')}")
+    secretProperties.setProperty("signing_key_alias", "${System.getenv('signing_key_alias')}")
+}
 
 repositories {
     maven {
@@ -26,15 +56,33 @@ android {
         applicationId "net.schueller.instarepost"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 200
-        versionName "2.0.0"
+        versionCode Integer.valueOf(System.env.VERSION_CODE ?: 1)
+        versionName "${System.env.VERSION_NAME}-${System.env.VERSION_SHA}"
+        buildConfigField "long", "BUILD_TIME", readPropertyWithDefault('buildTimestamp', System.currentTimeMillis()) + 'L'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            // You need to specify either an absolute path or include the
+            // keystore file in the same directory as the build.gradle file.
+            storeFile file("../android-signing-keystore.jks")
+            storePassword "${secretProperties['signing_keystore_password']}"
+            keyAlias "${secretProperties['signing_key_alias']}"
+            keyPassword "${secretProperties['signing_key_password']}"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
+            testCoverageEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     applicationVariants.all { variant ->
         variant.resValue "string", "versionName", variant.versionName
@@ -48,7 +96,6 @@ android {
 
 dependencies {
     implementation 'androidx.preference:preference:1.1.1'
-
 
     // if Java use this. If using Kotlin do NOT use this.
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"

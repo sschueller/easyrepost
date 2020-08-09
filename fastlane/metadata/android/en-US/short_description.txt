@@ -1,1 +1,1 @@
-An Instagram Downloader and Reposter
+Repost and download Instagram posts by clicking "Copy Share URL" in Instagram.
