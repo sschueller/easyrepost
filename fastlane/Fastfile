@@ -13,7 +13,7 @@ opt_out_usage
 #
 
 # Uncomment the line if you want fastlane to automatically update itself
-update_fastlane
+# update_fastlane
 
 default_platform(:android)
 
