@@ -49,6 +49,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // close this activity as oppose to navigating up
+        return false;
+    }
+
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
         @Override
@@ -69,23 +75,20 @@ public class SettingsActivity extends AppCompatActivity {
                     return false;
                 }
 
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                //Yes button clicked
-                                // clear all data
-                                Delete.table(Hashtag.class);
-                                Delete.table(Post.class);
-                                Delete.table(User.class);
+                DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            //Yes button clicked
+                            // clear all data
+                            Delete.table(Hashtag.class);
+                            Delete.table(Post.class);
+                            Delete.table(User.class);
 
-                                break;
+                            break;
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //No button clicked
-                                break;
-                        }
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
                     }
                 };
             });
