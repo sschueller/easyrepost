@@ -11,8 +11,9 @@
 </p>
 
 ## Screenshots
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_01.png)
-[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/shot_02.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png)
+[<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_en-US.png" width=160>](fastlane/metadata/android/en-US/images/phoneScreenshots/3_en-US.png)
 
 ## Description
 Download or repost public instagram posts easily by selecting "Copy Link" in Instagram.
