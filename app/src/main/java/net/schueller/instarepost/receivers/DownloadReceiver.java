@@ -46,9 +46,13 @@ public class DownloadReceiver extends BroadcastReceiver {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadId);
 
+            assert manager != null;
             Cursor cursor = manager.query(query);
 
             if (cursor.moveToFirst()) {
+
+                int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+
                 String uri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
                 String localUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                 String filePath = localUri.replace("file://", "");
@@ -59,13 +63,19 @@ public class DownloadReceiver extends BroadcastReceiver {
                 //Log.v(TAG, "downloadFilePath: "+ filePath);
 
                 Post post = Post.getByUrl(uri);
-                post.setStatus(1);
-                post.save();
 
-                //Log.v(TAG, "post: "+ post);
+                if (DownloadManager.STATUS_FAILED == status) {
+                    post.setStatus(Post.DOWNLOAD_FAILED);
+                    post.save();
+                } else {
+                    post.setStatus(Post.DOWNLOAD_COMPLETE);
+                    post.save();
 
-                // get Data from db
-                MainActivity.presentHeadsUpNotification(context, R.mipmap.ic_launcher, filePath, post);
+                    //Log.v(TAG, "post: "+ post);
+
+                    // get Data from db
+                    MainActivity.presentHeadsUpNotification(context, R.mipmap.ic_launcher, filePath, post);
+                }
             }
 
             cursor.close();

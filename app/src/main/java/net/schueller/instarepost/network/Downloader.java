@@ -75,10 +75,11 @@ public class Downloader {
 
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-                request.setAllowedNetworkTypes(
-                        DownloadManager.Request.NETWORK_WIFI
-                                | DownloadManager.Request.NETWORK_MOBILE)
-                        .setAllowedOverRoaming(false)
+                request
+//                        .setAllowedNetworkTypes(
+//                        DownloadManager.Request.NETWORK_WIFI
+//                                | DownloadManager.Request.NETWORK_MOBILE)
+//                        .setAllowedOverRoaming(false)
                         .setDescription("Downloading via " + getApplicationName(context) + "..")
                         .setTitle(fileName)
                         .setNotificationVisibility(
@@ -101,7 +102,7 @@ public class Downloader {
                     if (isVideo) {
                         post.setVideoFile(fileName);
                     }
-                    post.setStatus(0);
+                    post.setStatus(Post.DOWNLOAD_DOWNLOADING);
                     post.setUrl(url);
                     post.setCaption(caption);
                     post.setUsername(username);

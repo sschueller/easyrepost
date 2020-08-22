@@ -1,0 +1,3 @@
+ * Added pending downloads
+ * Added retry for failed downloads
+ * Added option to not jump back

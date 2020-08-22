@@ -34,6 +34,11 @@ import java.util.List;
 @ManyToMany(referencedTable = Hashtag.class)
 public class Post extends BaseModel {
 
+    public static final int DOWNLOAD_COMPLETE = 1;
+    public static final int DOWNLOAD_FAILED = 2;
+    public static final int DOWNLOAD_PENDING = 0;
+    public static final int DOWNLOAD_DOWNLOADING = 3;
+
     @PrimaryKey(autoincrement = true)
     long id; // package-private recommended, not required
 
@@ -63,7 +68,7 @@ public class Post extends BaseModel {
     private int isVideo;
 
     @Column
-    private int status = 1; // status of download, 0 = pending, 1 = downloaded
+    private int status = DOWNLOAD_PENDING; // status of download, 0 = pending, 1 = downloaded, 2 = failed
 
     @Column
     private String jsonMeta; // private with getters and setters
@@ -143,7 +148,7 @@ public class Post extends BaseModel {
     public static List<Post> createPostsList(int numPosts, int page) {
         return new Select()
                 .from(Post.class)
-                .where(Post_Table.status.eq(1))
+//                .where(Post_Table.status.eq(1))
                 .orderBy(Post_Table.id, false)
                 .offset(page * numPosts)
                 .limit(numPosts)

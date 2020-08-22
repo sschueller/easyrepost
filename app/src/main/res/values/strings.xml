@@ -77,5 +77,10 @@
     <string name="clear_all_data_desc">This will delete all data easy repost has captured. Photos and videos on device will not be deleted. They will only be remove from this app.</string>
     <string name="file_exists">This image already exists on this device. Please remove it to download it again.</string>
     <string name="action_open_folder">Folder</string>
+    <string name="retry_button">Retry</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_pending">Download Pending</string>
+    <string name="pref_title_jump_back_to_instagram">Jump back to Instagram</string>
+    <string name="pref_description_jump_back_to_instagram">Jump back to instragrm after receiving URL</string>
 
 </resources>

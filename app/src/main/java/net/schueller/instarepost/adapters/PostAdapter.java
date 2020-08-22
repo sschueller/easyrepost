@@ -17,15 +17,20 @@
  */
 package net.schueller.instarepost.adapters;
 
+import static net.schueller.instarepost.network.MetaDataLoader.GetAndProcessMetaData;
+
 import android.content.Context;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
@@ -49,11 +54,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private Context mContext;
 
-    // Pass in the contact array into the constructor
     public PostAdapter(Context context) {
         this.mContext = context;
     }
-
 
     @NonNull
     @Override
@@ -68,68 +71,80 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         final int currentPosition = viewHolder.getAdapterPosition();
 
-        try {
-            JSONObject postMetaJSON = new JSONObject(postList.get(currentPosition).getJsonMeta());
+        String urlToDownload = postList.get(currentPosition).getUrl();
 
-            viewHolder.captionTextView.setText(Parser.getCaption(postMetaJSON));
-            viewHolder.usernameTextView.setText(Parser.getUsername(postMetaJSON));
+        if (postList.get(currentPosition).getStatus() == 1) {
+            viewHolder.pendingLayout.setVisibility(View.GONE);
+            viewHolder.downloadedLayout.setVisibility(View.VISIBLE);
 
-            String subPath = "instarepost";
-            File path = new File(Environment.getExternalStorageDirectory(), subPath);
+            try {
+                JSONObject postMetaJSON = new JSONObject(postList.get(currentPosition).getJsonMeta());
 
-            final File myImageFile = new File(path, postList.get(currentPosition).getImageFile());
-            if (myImageFile.exists() && postList.get(currentPosition).getIsVideo() == 0) {
+                viewHolder.captionTextView.setText(Parser.getCaption(postMetaJSON));
+                viewHolder.usernameTextView.setText(Parser.getUsername(postMetaJSON));
 
-                Picasso.with(this.mContext).load(myImageFile)
+                String subPath = "instarepost";
+                File path = new File(Environment.getExternalStorageDirectory(), subPath);
+
+                final File myImageFile = new File(path, postList.get(currentPosition).getImageFile());
+                if (myImageFile.exists() && postList.get(currentPosition).getIsVideo() == 0) {
+
+                    Picasso.with(this.mContext).load(myImageFile)
 //                        .error(R.drawable.common_full_open_on_phone)
 //                        .placeholder(R.drawable.common_full_open_on_phone)
-                        .into(viewHolder.postImageView);
+                            .into(viewHolder.postImageView);
 
-                viewHolder.isVideo.setVisibility(View.INVISIBLE);
+                    viewHolder.isVideo.setVisibility(View.INVISIBLE);
 
-            } else if (postList.get(currentPosition).getIsVideo() == 1) {
-                String imageUrl = Parser.getDisplayUrl(postMetaJSON);
+                } else if (postList.get(currentPosition).getIsVideo() == 1) {
+                    String imageUrl = Parser.getDisplayUrl(postMetaJSON);
 
-                Picasso.with(this.mContext).load(imageUrl)
+                    Picasso.with(this.mContext).load(imageUrl)
 //                        .error(R.drawable.common_full_open_on_phone)
 //                        .placeholder(R.drawable.common_full_open_on_phone)
-                        .into(viewHolder.postImageView);
+                            .into(viewHolder.postImageView);
 
-                viewHolder.isVideo.setVisibility(View.VISIBLE);
+                    viewHolder.isVideo.setVisibility(View.VISIBLE);
+                }
+
+                // image/video click
+                viewHolder.postImageView
+                        .setOnClickListener(v -> Intents.view(v.getContext(), postList.get(currentPosition).getId()));
+
+                viewHolder.usernameTextView.setOnClickListener(
+                        v -> Intents.openUsername(v.getContext(), postList.get(currentPosition).getId()));
+
+                viewHolder.repostButton.setOnClickListener(
+                        v -> Intents.rePost(v.getContext(), postList.get(currentPosition).getId()));
+
+                viewHolder.shareButton.setOnClickListener(
+                        v -> Intents.share(v.getContext(), postList.get(currentPosition).getId()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            // image/video click
-            viewHolder.postImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intents.view(v.getContext(), postList.get(currentPosition).getId());
-                }
-            });
+        } else if (postList.get(currentPosition).getStatus() == 2) {
+            viewHolder.pendingLayout.setVisibility(View.VISIBLE);
+            viewHolder.downloadedLayout.setVisibility(View.GONE);
+            viewHolder.retryButton.setVisibility(View.VISIBLE);
 
-            viewHolder.usernameTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intents.openUsername(v.getContext(), postList.get(currentPosition).getId());
-                }
-            });
+            viewHolder.statusTextView.setText(mContext.getString(R.string.download_failed));
+            viewHolder.statusInfoTextView.setText(urlToDownload);
 
-            viewHolder.repostButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intents.rePost(v.getContext(), postList.get(currentPosition).getId());
-                }
-            });
+            viewHolder.retryButton
+                    .setOnClickListener(v -> GetAndProcessMetaData(postList.get(currentPosition), mContext));
 
-            viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intents.share(v.getContext(), postList.get(currentPosition).getId());
-                }
-            });
+        } else {
+            viewHolder.pendingLayout.setVisibility(View.VISIBLE);
+            viewHolder.downloadedLayout.setVisibility(View.GONE);
+            viewHolder.retryButton.setVisibility(View.GONE);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            viewHolder.statusTextView.setText(mContext.getString(R.string.download_pending));
+            viewHolder.statusInfoTextView.setText(urlToDownload);
+
         }
+
 
     }
 
@@ -156,18 +171,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         ImageView postImageView;
 
-        TextView captionTextView, usernameTextView, isVideo;
+        TextView captionTextView, usernameTextView, isVideo, statusTextView, statusInfoTextView;
 
-        Button repostButton, shareButton;
+        Button repostButton, shareButton, retryButton;
+
+        RelativeLayout pendingLayout, downloadedLayout;
 
         PostViewHolder(View itemView) {
             super(itemView);
             postImageView = itemView.findViewById(R.id.image);
             captionTextView = itemView.findViewById(R.id.caption);
             usernameTextView = itemView.findViewById(R.id.username);
+            statusTextView = itemView.findViewById(R.id.status);
+            statusInfoTextView = itemView.findViewById(R.id.status_info);
             isVideo = ((IconTextView) itemView.findViewById(R.id.isVideo));
             shareButton = itemView.findViewById(R.id.share_button);
             repostButton = itemView.findViewById(R.id.repost_button);
+            retryButton = itemView.findViewById(R.id.retry_button);
+
+            pendingLayout = itemView.findViewById(R.id.card_pending);
+            downloadedLayout = itemView.findViewById(R.id.card_downloaded);
         }
     }
 
