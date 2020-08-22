@@ -31,7 +31,7 @@ fi
 
 postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"name\": \"Release $CI_COMMIT_TAG\",\"body\": \"${release_notes@Q}\",\"draft\": false,\"prerelease\": false}"
 
-echo $postdata
+#echo $postdata
 
 # Generate Release
 #
@@ -41,10 +41,17 @@ echo $res
 
 release_id=$(echo $res | jq '.id')
 
+echo "Release ID: $release_id"
+
 re='^[0-9]+$'
 if ! [[ $release_id =~ $re ]] ; then
    echo "Invalid ID $release_id" >&2; exit 1
 fi
 
+ls -la app/build/outputs
+ls -la app/build/outputs/apk
+ls -la app/build/outputs/apk/release
+
+
 # Attach artifact
-curl -X POST -H "Authorization: token $github_token" -F 'data=@build/outputs/apk/release/app-release.apk' https://sschueller@uploads.github.com/repos/sschueller/easyrepost/releases/$release_id/assets?name=app-release.apk
+curl -X POST -H "Authorization: token $github_token" -F 'data=@app/build/outputs/apk/release/app-release.apk' https://sschueller@uploads.github.com/repos/sschueller/easyrepost/releases/$release_id/assets?name=app-release.apk
