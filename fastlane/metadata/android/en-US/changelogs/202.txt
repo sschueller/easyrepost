@@ -1,2 +1,2 @@
- * Better return after send to..
- * Network security improvements
+ - Better return after send to..
+ - Network security improvements

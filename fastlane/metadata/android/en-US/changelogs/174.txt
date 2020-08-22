@@ -1,2 +1,2 @@
- * Android 10 support
- * Fixed download issue
+ - Android 10 support
+ - Fixed download issue

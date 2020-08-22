@@ -1,1 +1,1 @@
- * Fix back button in settings
+ - Fix back button in settings

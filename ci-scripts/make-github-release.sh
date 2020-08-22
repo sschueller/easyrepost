@@ -29,7 +29,7 @@ if ! [[ "${rel}" = "null" ]] ; then
    echo "Release exists $CI_COMMIT_TAG" >&2; exit 1
 fi
 
-postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"name\": \"Release $CI_COMMIT_TAG\",\"body\": \"${release_notes@Q}\",\"draft\": false,\"prerelease\": false}"
+postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"name\": \"Release $CI_COMMIT_TAG\",\"body\": \"$release_notes\",\"draft\": false,\"prerelease\": false}"
 
 #echo $postdata
 
@@ -37,7 +37,7 @@ postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"na
 #
 res=$(curl -s -X POST -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases -d "$postdata")
 #echo $?
-echo $res
+echo $res | jq
 
 release_id=$(echo $res | jq '.id')
 
