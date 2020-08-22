@@ -93,6 +93,9 @@ publishGithub:
     - buildRelease
   when: manual
   script:
+    - "export VERSION_CODE=`ls -f ./fastlane/metadata/android/en-US/changelogs | cut -d_ -f3 | sort -n | tail -1 | rev | cut -c5- | rev` && echo $VERSION_CODE"
+    - "export VERSION_SHA=`echo ${CI_COMMIT_SHA:0:8}` && echo $VERSION_SHA"
+    - "export VERSION_NAME=${VERSION_CODE:0:1}.${VERSION_CODE:1:1}.${VERSION_CODE:2} && echo $VERSION_NAME"
     - ci-scripts/make-github-release.sh
   tags:
     - docker
