@@ -13,6 +13,52 @@
         android:layout_margin="0dp">
 
         <RelativeLayout
+            android:id="@+id/card_pending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="4dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#fff"/>
+
+            <TextView
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="4dp"
+                android:id="@+id/status_info"
+                android:layout_below="@id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            />
+
+            <Button
+                android:text="@string/retry_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/retry_button"
+                android:visibility="gone"
+                android:textColor="#70c461"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/card_downloaded"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:padding="0dp"

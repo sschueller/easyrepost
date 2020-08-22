@@ -1,3 +1,8 @@
+### Version 2.0.4 Tag: v2.0.4 (2020-08-22)
+ * Added pending downloads
+ * Added retry for failed downloads
+ * Added option to not jump back
+
 ### Version 2.0.3 Tag: v2.0.3 (2020-08-17)
  * Fix back button in settings
 

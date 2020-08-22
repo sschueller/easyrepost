@@ -41,9 +41,10 @@ public class Parser {
                 .compile(context.getResources().getString(R.string.data_instagram_regex_pattern));
         Matcher matches = pattern.matcher(uri);
 
-        Log.v(TAG, "clipboardData: " + uri);
+        Log.v(TAG, "urltomatch: " + uri);
 
         if (matches.matches()) {
+            Log.v(TAG, "matches: " + matches.group(1));
             return matches.group(1);
         }
 

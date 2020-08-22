@@ -15,6 +15,12 @@
             app:summary="@string/pref_description_multiple_repost_intent"
             app:title="@string/pref_title_multiple_repost_intent" />
 
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="pref_jump_back_to_instagram"
+            app:summary="@string/pref_description_jump_back_to_instagram"
+            app:title="@string/pref_title_jump_back_to_instagram" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_section_info">

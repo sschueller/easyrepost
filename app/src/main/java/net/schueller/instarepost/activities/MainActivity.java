@@ -212,18 +212,26 @@ public class MainActivity extends AppCompatActivity {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 ClipBoardProcessor cbp = new ClipBoardProcessor(getApplicationContext());
                 if (cbp.processUri(sharedText)) {
-                    // go back to instagram
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
-                    if (launchIntent != null) {
 
-                        startActivity(launchIntent);//null pointer check in case package name was not found
-                        finish();
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+                    boolean jumpBackToInstagram = sharedPref.getBoolean("pref_jump_back_to_instagram", true);
 
-                    } else {
+                    if (jumpBackToInstagram) {
+                        // go back to instagram
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+                        if (launchIntent != null) {
 
-                        Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
-                                .show();
+                            startActivity(launchIntent);//null pointer check in case package name was not found
+                            finish();
+
+                        } else {
+
+                            Toast.makeText(this, getString(R.string.toast_please_install_instagram), Toast.LENGTH_LONG)
+                                    .show();
+                        }
                     }
+
+
                 } else {
                     Toast.makeText(this, getString(R.string.toast_not_a_valid_instagram_uri) + sharedText, Toast.LENGTH_LONG)
                             .show();
@@ -317,8 +325,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showHelpCard(boolean show) {
-        LinearLayout emptyCard = ((LinearLayout) findViewById(R.id.rate_card_empty_list));
-        SwipeRefreshLayout refreshLayout = ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout));
+        LinearLayout emptyCard = findViewById(R.id.rate_card_empty_list);
+        SwipeRefreshLayout refreshLayout = findViewById(R.id.swipeRefreshLayout);
 
         if (show) {
             emptyCard.setVisibility(View.VISIBLE);
@@ -348,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         AppRated = sharedPref.getBoolean(ratePref, false);
 
-        RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvPosts);
+        RecyclerView rvItems = findViewById(R.id.rvPosts);
         rvItems.setHasFixedSize(true);
 
         rvAdapter = new PostAdapter(this);
@@ -374,13 +382,10 @@ public class MainActivity extends AppCompatActivity {
 
             rvAdapter.notifyDataSetChanged();
 
-            final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    drawList();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+            final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                drawList();
+                swipeRefreshLayout.setRefreshing(false);
             });
 
             rvItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -397,16 +402,12 @@ public class MainActivity extends AppCompatActivity {
             });
 
             ItemClickSupport.addTo(rvItems)
-                    .setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                    .setOnItemLongClickListener((recyclerView, position, v) -> {
 
-                            final int position2 = position;
+                        final int position2 = position;
 
-                            DialogInterface.OnClickListener dialogClickListener
-                                    = new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                        DialogInterface.OnClickListener dialogClickListener
+                                = (dialog, which) -> {
                                     switch (which) {
                                         case DialogInterface.BUTTON_POSITIVE:
                                             //Yes button clicked
@@ -430,15 +431,13 @@ public class MainActivity extends AppCompatActivity {
                                             //No button clicked
                                             break;
                                     }
-                                }
-                            };
+                                };
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                            builder.setMessage(getString(R.string.dialog_are_you_sure_you_want_to_delete))
-                                    .setPositiveButton(getString(R.string.dialog_yes), dialogClickListener)
-                                    .setNegativeButton(getString(R.string.dialog_no), dialogClickListener).show();
-                            return true;
-                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                        builder.setMessage(getString(R.string.dialog_are_you_sure_you_want_to_delete))
+                                .setPositiveButton(getString(R.string.dialog_yes), dialogClickListener)
+                                .setNegativeButton(getString(R.string.dialog_no), dialogClickListener).show();
+                        return true;
                     });
         }
 
@@ -457,6 +456,7 @@ public class MainActivity extends AppCompatActivity {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -575,13 +575,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void rateCard() {
 
-        rateCard = ((CardView) findViewById(R.id.rate_card_view));
+        rateCard = findViewById(R.id.rate_card_view);
 
         state = 1;
 
-        questionTextView = ((TextView) findViewById(R.id.question));
-        leftButton = ((Button) findViewById(R.id.left_button));
-        rightButton = ((Button) findViewById(R.id.right_button));
+        questionTextView = findViewById(R.id.question);
+        leftButton = findViewById(R.id.left_button);
+        rightButton = findViewById(R.id.right_button);
 
         setRateTexts();
 
