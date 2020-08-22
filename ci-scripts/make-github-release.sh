@@ -6,9 +6,21 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 # get release notes
 release_notes=`cat fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt`
 
+echo "Commit Tag: $CI_COMMIT_TAG"
+
+if ! [[ "${CI_COMMIT_TAG}" = "" ]] ; then
+   echo "No CI_COMMIT_TAG" >&2; exit 1
+fi
+
+# check we have token
+echo "" | md5sum
+echo "$github_token" | md5sum
+
 # Check release exists?
+echo "https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG"
 res=$(curl -X GET -s -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG)
 
+echo $?
 echo $res
 
 rel=$(echo $res | jq ".id")
@@ -22,7 +34,7 @@ postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"na
 # Generate Release
 #
 res=$(curl -s -X POST -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases -d "$postdata")
-
+echo $?
 echo $res
 
 release_id=$(echo $res | jq '.id')
