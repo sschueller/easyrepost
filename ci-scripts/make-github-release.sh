@@ -8,7 +8,7 @@ release_notes=`cat fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt`
 
 echo "Commit Tag: $CI_COMMIT_TAG"
 
-if ! [[ "${CI_COMMIT_TAG}" = "" ]] ; then
+if [[ "${CI_COMMIT_TAG}" = "" ]] ; then
    echo "No CI_COMMIT_TAG" >&2; exit 1
 fi
 
