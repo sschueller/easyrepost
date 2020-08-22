@@ -7,7 +7,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 release_notes=`cat fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt`
 
 # Check release exists?
-rel=$(curl -X GET -s -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG | jq ".id")
+res=$(curl -X GET -s -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG)
+
+echo $res
+
+rel=$(echo $res | jq ".id")
 
 if ! [[ "${rel}" = "null" ]] ; then
    echo "Release exists $CI_COMMIT_TAG" >&2; exit 1
@@ -17,7 +21,11 @@ postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"na
 
 # Generate Release
 #
-release_id=$(curl -s -X POST -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases -d "$postdata" | jq '.id')
+res=$(curl -s -X POST -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases -d "$postdata")
+
+echo $res
+
+release_id=$(echo $res | jq '.id')
 
 re='^[0-9]+$'
 if ! [[ $release_id =~ $re ]] ; then
