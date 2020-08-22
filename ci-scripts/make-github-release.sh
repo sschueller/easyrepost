@@ -4,7 +4,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 # get release notes
-release_notes=`cat fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt`
+release_notes=`cat fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt`
 
 # Check release exists?
 rel=$(curl -X GET -s -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG | jq ".id")
