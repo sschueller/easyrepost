@@ -12,31 +12,27 @@ if [[ "${CI_COMMIT_TAG}" = "" ]] ; then
    echo "No CI_COMMIT_TAG" >&2; exit 1
 fi
 
-# check we have token
-#echo "" | md5sum
-#echo "$github_token" | md5sum
-
 # Check release exists?
-#echo "https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG"
+echo "Check release exists..."
 res=$(curl -X GET -s -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases/tags/$CI_COMMIT_TAG)
-
-#echo $?
-#echo $res
 
 rel=$(echo $res | jq ".id")
 
-if ! [[ "${rel}" = "null" ]] ; then
-   echo "Release exists $CI_COMMIT_TAG" >&2; exit 1
+if ! [[ "${rel}" = "null" ]] || [[ "${rel}" = "" ]] ; then
+   echo "Release exists $CI_COMMIT_TAG, stopping" >&2; exit 1
+else
+   echo "Release does not exist.";
 fi
 
-postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\": \"master\",\"name\": \"Release $CI_COMMIT_TAG\",\"body\": \"$release_notes\",\"draft\": false,\"prerelease\": false}"
-
-#echo $postdata
+# escape release notes
+release_notes=$(echo ${release_notes} | jq -aRs .)
+postdata="{\"tag_name\":\"$CI_COMMIT_TAG\",\"target_commitish\":\"master\",\"name\":\"Release $CI_COMMIT_TAG\",\"body\":$release_notes,\"draft\":false,\"prerelease\":false}"
 
 # Generate Release
-#
+echo "Generate Release..."
+echo "$postdata" | jq
+
 res=$(curl -s -X POST -H "Content-Type:application/json" -H "Authorization: token $github_token" https://sschueller@api.github.com/repos/sschueller/easyrepost/releases -d "$postdata")
-#echo $?
 echo $res | jq
 
 release_id=$(echo $res | jq '.id')
@@ -52,6 +48,6 @@ ls -la app/build/outputs
 ls -la app/build/outputs/apk
 ls -la app/build/outputs/apk/release
 
-
+echo "Attaching artifact..."
 # Attach artifact
 curl -X POST -H "Authorization: token $github_token" -F 'data=@app/build/outputs/apk/release/app-release.apk' https://sschueller@uploads.github.com/repos/sschueller/easyrepost/releases/$release_id/assets?name=app-release.apk
