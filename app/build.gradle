@@ -56,8 +56,8 @@ android {
         applicationId "net.schueller.instarepost"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode Integer.valueOf(System.env.VERSION_CODE ?: 1)
-        versionName "${System.env.VERSION_NAME}-${System.env.VERSION_SHA}"
+        versionCode Integer.valueOf(System.getenv("VERSION_CODE") ?: 1)
+        versionName System.getenv("VERSION_NAME") + "-" + System.getenv("VERSION_SHA") // "${System.env.VERSION_NAME}-${System.env.VERSION_SHA}"
         buildConfigField "long", "BUILD_TIME", readPropertyWithDefault('buildTimestamp', System.currentTimeMillis()) + 'L'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
