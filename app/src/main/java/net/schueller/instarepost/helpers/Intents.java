@@ -17,6 +17,8 @@
  */
 package net.schueller.instarepost.helpers;
 
+import static net.schueller.instarepost.helpers.Util.getFullFilePath;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -164,8 +166,7 @@ public class Intents {
     }
 
     private static Uri loadResource(Post post, Context context) {
-        File path = new File(Environment.getExternalStorageDirectory(), subPath);
-        File myFile = new File(path, (post.getIsVideo() == 1) ? post.getVideoFile() : post.getImageFile());
+        File myFile = getFullFilePath((post.getIsVideo() == 1) ? post.getVideoFile() : post.getImageFile(), context);
         if (myFile.exists()) {
             return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", myFile);
         } else {

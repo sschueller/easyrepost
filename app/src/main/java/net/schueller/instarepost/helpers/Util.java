@@ -17,10 +17,13 @@
  */
 package net.schueller.instarepost.helpers;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.webkit.URLUtil;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -76,5 +79,18 @@ public class Util {
         }
 
         return inSampleSize;
+    }
+
+    public static File getFullFilePath(String filename, Context context)
+    {
+        File folder = context.getExternalFilesDir("instarepost" + File.separator);
+
+        assert folder != null;
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        String filePath = folder + File.separator;
+        return new File(filePath + filename);
     }
 }

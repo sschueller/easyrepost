@@ -17,6 +17,8 @@
  */
 package net.schueller.instarepost.network;
 
+import static net.schueller.instarepost.helpers.Util.getFullFilePath;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
@@ -44,21 +46,14 @@ public class Downloader {
         return context.getString(stringId);
     }
 
-    public static void download(Context context, String folder, String url, final boolean isVideo,
+    public static void download(Context context, String url, final boolean isVideo,
             final JSONObject postMetaJSON) {
 
         Log.v(TAG, "Download start");
 
-        File direct = new File(folder);
-        boolean dirOk = true;
-        if (!direct.exists()) {
-            dirOk = direct.mkdirs();
-        }
-
         final String fileName = URLUtil.guessFileName(url, null, null);
 
-        final String filePath = folder + "/";
-        final File myFile = new File(filePath + fileName);
+        final File myFile = getFullFilePath(fileName, context);
 
         Uri uri = Uri.fromFile(myFile);
 
@@ -66,89 +61,85 @@ public class Downloader {
 
         if (!myFile.exists()) {
 
-            if (dirOk) {
 
-                Log.v(TAG, "new downloadManager");
+            Log.v(TAG, "new downloadManager");
 
-                DownloadManager downloadManager = (DownloadManager) (context)
-                        .getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager downloadManager = (DownloadManager) (context)
+                    .getSystemService(Context.DOWNLOAD_SERVICE);
 
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-                request
+            request
 //                        .setAllowedNetworkTypes(
 //                        DownloadManager.Request.NETWORK_WIFI
 //                                | DownloadManager.Request.NETWORK_MOBILE)
 //                        .setAllowedOverRoaming(false)
-                        .setDescription("Downloading via " + getApplicationName(context) + "..")
-                        .setTitle(fileName)
-                        .setNotificationVisibility(
-                                DownloadManager.Request.VISIBILITY_VISIBLE)
-                        .setDestinationUri(uri);
+                    .setDescription("Downloading via " + getApplicationName(context) + "..")
+                    .setTitle(fileName)
+                    .setNotificationVisibility(
+                            DownloadManager.Request.VISIBILITY_VISIBLE)
+                    .setDestinationUri(uri);
 
-                Log.v(TAG, "downloadManager enqueue");
+            Log.v(TAG, "downloadManager enqueue");
 
-                String username = Parser.getUsername(postMetaJSON);
-                String caption = Parser.getCaption(postMetaJSON);
+            String username = Parser.getUsername(postMetaJSON);
+            String caption = Parser.getCaption(postMetaJSON);
 
-                try {
+            try {
 
-                    Log.v(TAG, "to save: " + fileName);
+                Log.v(TAG, "to save: " + fileName);
 
-                    Post post = new Post();
-                    post.setImageFile(fileName);
-                    //post.setUrl(shareUrl);
-                    post.setIsVideo(isVideo ? 1 : 0);
-                    if (isVideo) {
-                        post.setVideoFile(fileName);
+                Post post = new Post();
+                post.setImageFile(fileName);
+                //post.setUrl(shareUrl);
+                post.setIsVideo(isVideo ? 1 : 0);
+                if (isVideo) {
+                    post.setVideoFile(fileName);
+                }
+                post.setStatus(Post.DOWNLOAD_DOWNLOADING);
+                post.setUrl(url);
+                post.setCaption(caption);
+                post.setUsername(username);
+                post.setJsonMeta(postMetaJSON.toString());
+
+                // add/find user or create new one
+                User user = User.getUserByUsername(username);
+                if (user == null) {
+                    user = new User();
+                    user.setUsername(username);
+                    user.save();
+                }
+                post.setUserId(user.getId());
+
+                post.save();
+
+                Log.v(TAG, "post: " + post.getUrl());
+
+                // find add hashtags
+                List<String> hashtags = Util.parseHashTags(caption);
+                for (String hashtagString : hashtags) {
+                    Hashtag hashtag = Hashtag.getHastagByHashtag(hashtagString);
+                    if (hashtag == null) {
+                        hashtag = new Hashtag();
+                        hashtag.setHashtag(hashtagString);
+                        hashtag.save();
                     }
-                    post.setStatus(Post.DOWNLOAD_DOWNLOADING);
-                    post.setUrl(url);
-                    post.setCaption(caption);
-                    post.setUsername(username);
-                    post.setJsonMeta(postMetaJSON.toString());
-
-                    // add/find user or create new one
-                    User user = User.getUserByUsername(username);
-                    if (user == null) {
-                        user = new User();
-                        user.setUsername(username);
-                        user.save();
-                    }
-                    post.setUserId(user.getId());
-
-                    post.save();
-
-                    Log.v(TAG, "post: " + post.getUrl());
-
-                    // find add hashtags
-                    List<String> hashtags = Util.parseHashTags(caption);
-                    for (String hashtagString : hashtags) {
-                        Hashtag hashtag = Hashtag.getHastagByHashtag(hashtagString);
-                        if (hashtag == null) {
-                            hashtag = new Hashtag();
-                            hashtag.setHashtag(hashtagString);
-                            hashtag.save();
-                        }
-                        // add link
-                        Post_Hashtag postHashtag = new Post_Hashtag();
-                        postHashtag.setHashtag(hashtag);
-                        postHashtag.setPost(post);
-                        postHashtag.save();
-                    }
-
-                    // start download
-                    downloadManager.enqueue(request);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // add link
+                    Post_Hashtag postHashtag = new Post_Hashtag();
+                    postHashtag.setHashtag(hashtag);
+                    postHashtag.setPost(post);
+                    postHashtag.save();
                 }
 
-            } else {
-                Log.v(TAG, "download failed");
+                // start download
+                downloadManager.enqueue(request);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         } else {
-            Log.v(TAG, "File with name exists: " + filePath + fileName);
+            Log.v(TAG, "File with name exists: " + fileName);
             Toast.makeText(context, R.string.file_exists, Toast.LENGTH_LONG).show();
 
         }

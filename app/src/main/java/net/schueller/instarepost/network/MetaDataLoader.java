@@ -20,13 +20,11 @@ package net.schueller.instarepost.network;
 import static net.schueller.instarepost.models.Post.DOWNLOAD_FAILED;
 
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -57,9 +55,6 @@ public class MetaDataLoader {
 
         post.setStatus(0);
         post.save();
-
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                File.separator + "instarepost" + File.separator;
 
         String url = post.getUrl();
 
@@ -119,7 +114,7 @@ public class MetaDataLoader {
                                     // we have a carousel, download each
                                     for (Node node : nodes) {
                                         Log.v(TAG, "Download: " + node.getUrl());
-                                        Downloader.download(context.getApplicationContext(), filePath, node.getUrl(),
+                                        Downloader.download(context.getApplicationContext(), node.getUrl(),
                                                 node.isVideo(), jsonObj);
                                     }
                                 } else {

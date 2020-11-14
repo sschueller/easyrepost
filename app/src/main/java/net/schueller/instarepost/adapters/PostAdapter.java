@@ -17,10 +17,10 @@
  */
 package net.schueller.instarepost.adapters;
 
+import static net.schueller.instarepost.helpers.Util.getFullFilePath;
 import static net.schueller.instarepost.network.MetaDataLoader.GetAndProcessMetaData;
 
 import android.content.Context;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,10 +83,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 viewHolder.captionTextView.setText(Parser.getCaption(postMetaJSON));
                 viewHolder.usernameTextView.setText(Parser.getUsername(postMetaJSON));
 
-                String subPath = "instarepost";
-                File path = new File(Environment.getExternalStorageDirectory(), subPath);
+                final File myImageFile = getFullFilePath(postList.get(currentPosition).getImageFile(), mContext);
 
-                final File myImageFile = new File(path, postList.get(currentPosition).getImageFile());
                 if (myImageFile.exists() && postList.get(currentPosition).getIsVideo() == 0) {
 
                     Picasso.with(this.mContext).load(myImageFile)
@@ -138,11 +136,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         } else {
             viewHolder.pendingLayout.setVisibility(View.VISIBLE);
             viewHolder.downloadedLayout.setVisibility(View.GONE);
-            viewHolder.retryButton.setVisibility(View.GONE);
+            viewHolder.retryButton.setVisibility(View.VISIBLE);
 
             viewHolder.statusTextView.setText(mContext.getString(R.string.download_pending));
             viewHolder.statusInfoTextView.setText(urlToDownload);
 
+            viewHolder.retryButton
+                    .setOnClickListener(v -> GetAndProcessMetaData(postList.get(currentPosition), mContext));
         }
 
 
