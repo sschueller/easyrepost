@@ -1,6 +1,9 @@
-### Version 2.0.5 Tag: v2.0.5 (2020-11-14)
+### Version 2.0.6 Tag: v2.0.5 (2020-11-15)
  - Fixed Android 10 external path issues
 
+### Version 2.0.5 Tag: v2.0.5 (2020-11-14)
+ - Ci Test
+ 
 ### Version 2.0.4 Tag: v2.0.4 (2020-08-22)
  - Added pending downloads
  - Added retry for failed downloads
